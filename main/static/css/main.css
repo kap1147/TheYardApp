@@ -1,0 +1,15 @@
+body {
+	font-family:"Lucida Sans Unicode";
+	background-color: #FAD7A0;
+}
+
+.nav-custom-bg {
+	background-color: #3C1D00;
+}
+
+.btn-wrap-text {
+    overflow: hidden;
+  white-space: nowrap;
+  display: inline-block;
+  text-overflow: ellipsis;
+}

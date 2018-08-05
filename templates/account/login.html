@@ -1,0 +1,64 @@
+{% extends "account/base.html" %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+{% load account socialaccount %}
+{% load static %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+{% block content %}
+
+
+<div class='col-md-6 col-lg-4 mx-auto'>
+<div class="card">
+ <div class="card-body">
+<h1><center>Log in</center></h1>
+<hr></br>
+
+{% load socialaccount %}
+<a href="{% provider_login_url "facebook" method="oauth2" %}" style="
+        background: #4267b2;
+        border-radius: 5px;
+        color: white;
+        height: 40px;
+        text-align: center;"  class="btn btn-block" role="button" aria-pressed="true"><span class="myicons-facebook2 pull-left"></span>  Connect With Facebook</a>
+
+</br></br>
+
+<a href="https://theyardapp.com/accounts/google/login/?process=login" style="
+        background: white;
+        border-radius: 5px;
+	border: 2px solid #D8D8D8;
+        color: grey;
+        height: 40px;
+        text-align: center;
+        width: 100%;"  class="btn" role="button" aria-pressed="true"><span class="myicons-google2 pull-left"></span>  Connect With Google</a>
+
+</br></br>
+
+<div class='row'>
+  <div class='col'>
+   <center><h5>Or</h5></center>
+  </div>
+</div>
+
+<form class="login" method="POST" action="{% url 'account_login' %}">
+  {% csrf_token %}
+  {{ form|crispy }}
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  {% endif %}
+  <button class="primaryAction btn btn-block btn-success" type="submit">{% trans "Sign In" %}</button>
+  </br>  
+  <div class='row'>
+    <div class='col-6'>
+      <a href="{{ signup_url }}" class="btn btn-primary btn-block" role="button" aria-pressed="true">Sign Up</a>
+    </div>
+    <div class='col-6'>
+	<a href="{% url 'account_reset_password' %}" class="btn btn-danger btn-block" role="button" aria-pressed="true">Forgot Password</a>
+    </div>
+  </div>
+</form>
+   </div>
+ </div>
+</div>
+{% endblock %}
