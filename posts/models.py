@@ -18,12 +18,16 @@ class Post(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True)
     featured = models.BooleanField(default=False)
+    location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='posts')
 
     class Meta:
         ordering = ['-created']
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('posts:post_detail', kwargs={'pk': self.pk})
 
 class Image(models.Model):
     title = models.CharField(max_length=60)
@@ -58,4 +62,5 @@ class Image(models.Model):
             im.save(output, format='PNG', quality=100)
             output.seek(0)
             image = InMemoryUploadedFile(output,'ImageField', "%s.png" %image.name.split('.')[0], 'image/png', getsizeof(output), None)
+        self.image = image
         super().save(*args, **kwargs)

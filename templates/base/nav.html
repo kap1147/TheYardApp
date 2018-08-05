@@ -24,7 +24,6 @@
         <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Post</a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="{% url 'posts:post_user_list' request.user.profile.slug %}">My Posts</a>
           <a class="dropdown-item" href="{% url 'posts:post_add' %}">Add Post</a>
         </div>
       </li>
@@ -34,24 +33,11 @@
         <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <span class="myicons-user"></span> {{ request.user.username|title }}</a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="{% url 'profile' %}">View</a>
-          <a class="dropdown-item" href="{% url 'profile_update' slug=request.user.profile.slug %}">Update</a>
-        </div>
       </li>
         <li>
-          <a class="nav-link" href="{% url 'account_logout' %}">Logout</a>
         </li>
-        {% else %}
-        <li>
-          <a class="nav-link" href="{% url 'account_login' %}">Login</a>
-        </li>
-	<li>
-          <a class="nav-link" href="{% url 'account_signup' }}">SignUp</a>
-        </li>
-        {% endif %}
       </ul>
-      
+      {% endif %} 
     </div>
   </div>
 </nav>

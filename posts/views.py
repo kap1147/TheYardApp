@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
 
-from allauth.account.models import Profile
+#from allauth.account.models import Profile
 from locations.models import Location
 from .models import Post, Image
 from .forms import PostCreateForm, BaseImageFormset, ImageForm
@@ -49,7 +49,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     fields = ['title', 'content', 'price']
 
     def form_valid(self, form):
-        form.instance.user = self.request.user
+        form.instance.owner = self.request.user
         messages.success(self.request, "Post added.")
         return super().form_valid(form)
 
@@ -58,7 +58,7 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
     fields = ['title', 'content', 'price']
     
     def get_object(self, *args, **kwargs):
-        instance = get_object_or_404(Post, user=self.request.user, pk=self.kwargs['pk'])
+        instance = get_object_or_404(Post, owner=self.request.user, pk=self.kwargs['pk'])
         return instance
 
     def form_valid(self, form):
@@ -87,7 +87,7 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
 @login_required(login_url='/accounts/login/')
 def postUserListView(request, slug):
     template = "posts/post_list.html"
-    qs = Post.objects.filter(slug=slug)
+    qs = Post.objects.filter(owner=slug)
     return render(request, template, {'object_list': qs})
 
 
@@ -114,7 +114,7 @@ def ajaxSetPostLocation(request):
         location.save()
         success = 'Location added.'
     if pk_:
-        post = get_object_or_404(Post, user=request.user, pk=pk_)
+        post = get_object_or_404(Post, owner=request.user, pk=pk_)
         post.location = location
         post.save()
 
