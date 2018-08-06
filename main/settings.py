@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['142.93.64.220']
 
+#SECURE_SSL_REDIRECT = True 
+
 
 # Application definition
 
@@ -42,7 +44,9 @@ INSTALLED_APPS = [
     'storages',
     'rest_framework',
     'crispy_forms',
+    'channels',
 
+    'chat',
     'posts',
     'locations',
 ]
@@ -79,8 +83,18 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'main.wsgi.application'
+ASGI_APPLICATION = 'main.routing.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('localhost', 6379)],
+        },
+    },
+}
 
+WSGI_APPLICATION = 'main.wsgi.application'
+ASGI_APPLICATION = "main.routing.application"
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
@@ -91,7 +105,7 @@ DATABASES = {
         'NAME': 'django2',
         'USER': 'django',
         'PASSWORD': 'Aleena19!',
-        'HOST': 'localhost',
+        'HOST': '127.0.0.1',
         'PORT': '',
     }
 }
