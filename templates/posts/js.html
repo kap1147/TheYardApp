@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+
+
+
+{% endblock content %}
+
+
+{% block extra_js %}
+
+// Submit post on submit
+$('#post-form').on('submit', function(event){
+    event.preventDefault();
+    console.log("form submitted!")  // sanity check
+    create_post();
+});
+
+{% endblock extra_js %}
