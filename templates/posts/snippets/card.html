@@ -34,8 +34,43 @@
       {% if request.user == instance.owner and request.path == post_detail_url %}
       <a href="{% url 'posts:post_update' pk=instance.id %}" class="btn btn-warning">Update</a>
       <a href="{% url 'posts:post_delete' pk=instance.id %}" class="btn btn-danger">Delete</a></small>
+      {% elif request.user != instance.owner and request.path == post_detail_url %}
+
+	<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+  Make Bid
+</button>  
+
+
       {% elif request.path != post_detail_url %}
       <a href="{% url 'posts:post_detail' pk=instance.id %}" class="btn btn-info btn-block">view</a>
       {% endif %}
     </div>
 </div>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title mx-auto" id="exampleModalLabel"><strong>Enter your offer</strong></h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+	<h5><center>{{ instance.title }}</center></h5>
+      <div class="modal-body mx-auto">
+	<form class='form formBid' action='{% url 'posts:post_add' %}' method='POST'>
+		<div class='form-group'>
+			<input class='bid form-control' type='text' name='bid' placeholder='{{ instance.price }}'>
+		</div>
+	</form>
+      </div>
+      <div class="modal-footer">
+	<hr>
+        <button type="button" class="mb btn btn-block btn-primary">Send Offer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
