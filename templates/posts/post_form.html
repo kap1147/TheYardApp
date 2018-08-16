@@ -58,35 +58,24 @@
 
 
 	//AJAX create post function
-	function create_post(local){
-<<<<<<< HEAD
-		console.log('inside create post function');
-		var form = $('.postForm').serialize();
-		data = { loc: local };
+	function create_post(local, data){
+		console.log('inside create post function')
+		var f = $('.postForm').serialize() + '&loc=' + local;
+	        console.log(f)	
+
+
 		$.ajax({
 			url : "{% url 'posts:ajax_post' %}",
 			type: "POST",
-			data: form + '&' + $.param(data),
+			data: data + '&loc=' + local,
 			enctype: 'multipart/form-data',			
 
 			success : function(json) {
-			$(location).attr('href', json['url']);
+			//$(location).attr('href', json['url']);
 			},
 			error : function(xhr, errmsg, err) {
 				$('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+" <a href='#' class='close'>&times;</a></div>")
 				console.log(xhr.status + ': ' + xhr.responseText);
-=======
-		console.log('inside create post function')
-		var f = $('.postForm').serialize() + '&loc=' + local;
-	        console.log(f)	
-		$.ajax({
-			url : "{% url 'posts:ajax_post' %}",
-			type: "POST",
-			data: f,
-			
-			success : function(json) {
-				$(location).attr('href', json['url']);
->>>>>>> bd847206117a6bb4430d257bbd7ab9aa2be634e6
 			}	
 		});
 	};
@@ -95,46 +84,28 @@
 
 	//AJAX get location function
         function get_location() {
-<<<<<<< HEAD
         var data = { 
-			{% if form.instance.id %}id: {{form.instance.id}},{% endif %}
-=======
-		console.log('now inside get_location')
-		$.ajax({
-			url  : "{% url 'posts:ajax_location' %}",
-			type : 'POST',
-			data : { 
 					{% if form.instance.id %}id: {{form.instance.id}},{% endif %}
->>>>>>> bd847206117a6bb4430d257bbd7ab9aa2be634e6
 					city    : itemCity,
 					state   : itemState,
 					country :itemCountry,
 					lat     : itemLat,
 					lng     : itemLng
-<<<<<<< HEAD
 					};
+		var form = $('.postForm').serialize();
 		console.log('now inside get_location');
-		console.log(data);
 		$.ajax({
 			url  : "{% url 'posts:ajax_location' %}",
 			type : 'POST',
-			data : data,
+			data : form + '&' + $.param(data),
 			success : function(json) {
 				console.log('success call')
 				if (json['status'] = 'Update Post') {
 					$(location).attr('href', json['url']);
 				} 
 				if (json['status'] = 'Create Post') {
-=======
-					},
-			success : function(json) {
-				if (json['status'] = 'Update Post') {
-					$(location).attr('href', json['url']);
-				} 
-				else if (json['status'] = 'Create Post') {
->>>>>>> bd847206117a6bb4430d257bbd7ab9aa2be634e6
 					local = json['location']
-					create_post(local);
+					create_post(local, form);
 				}
 			},
 			error : function(xhr, errmsg, err) {
@@ -186,17 +157,10 @@
 			event.preventDefault();
 			var form = $('.postForm');
 			console.log('form submitted!')
-<<<<<<< HEAD
 			get_location();
-=======
-			get_location(form);
->>>>>>> bd847206117a6bb4430d257bbd7ab9aa2be634e6
 		});
 	});
 </script>
 {% endblock extra_js%}
-<<<<<<< HEAD
 
-=======
->>>>>>> bd847206117a6bb4430d257bbd7ab9aa2be634e6
 

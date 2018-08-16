@@ -29,9 +29,9 @@
       <p class="card-text">{% if request.path == post_detail_url %}{{ instance.content }}{% else %}{{ instance.content|truncatewords:12 }}{% endif %}</p>
     </div>
     <div class="card-footer">
-      <small class="text-muted">{{ instance.timestamp|timesince }} ago</small>
+      <small class="text-muted">{{ instance.created|timesince }} ago</small>
       <small class="pull-right">{{ instance.location }}</small>
-      {% if request.user == instance.user and request.path == post_detail_url %}
+      {% if request.user == instance.owner and request.path == post_detail_url %}
       <a href="{% url 'posts:post_update' pk=instance.id %}" class="btn btn-warning">Update</a>
       <a href="{% url 'posts:post_delete' pk=instance.id %}" class="btn btn-danger">Delete</a></small>
       {% elif request.path != post_detail_url %}

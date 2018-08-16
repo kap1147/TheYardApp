@@ -138,8 +138,9 @@ def ajaxSetPostLocation(request):
                 post = Post.objects.get(pk=pk)
                 if not all(v is None for v in l):
                     post.location = location
-                    post.save()
-                post.location = location
+                post.title = request.POST.get('title')
+                post.price = request.POST.get('price')
+                post.content = request.POST.get('content')
                 post.save()
                 url = '/posts/' + str(post.id) + '/'
                 response_data['status'] = 'Update Post'
