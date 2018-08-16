@@ -14,6 +14,10 @@ from locations.models import Location
 from .models import Post, Image
 from .forms import PostCreateForm, BaseImageFormset, ImageForm
 from django.forms import modelformset_factory, formset_factory
+from django.http import HttpResponse
+import json
+from django.core import serializers
+
 
 @login_required(login_url='/accounts/login/')
 def postCreateView(request):
@@ -23,7 +27,7 @@ def postCreateView(request):
         formset = ImageFormset(request.POST or None, request.FILES or None)
         if form.is_valid() and formset.is_valid():
             post = form.save(commit=False)
-            post.user = request.user
+            post.owner = request.user
             post.save()
             i = 1
             for instance in formset:
@@ -50,6 +54,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
+        form.instance.location = Location.objects.get(pk=self.request.POST.get('location'))
         messages.success(self.request, "Post added.")
         return super().form_valid(form)
 
@@ -98,27 +103,84 @@ class PostListView(ListView):
         return Post.objects.filter(active=True)
 
 def ajaxSetPostLocation(request):
-    city = request.POST.get('city', None)
-    state = request.POST.get('state', None)
-    country = request.POST.get('country', None)
-    lng = request.POST.get('longitude', None)
-    lat = request.POST.get('latitude', None)
-    pk_ = request.POST.get('id', None)
+    if request.method == 'POST':
+        if request.is_ajax():
+            l = []
+            city = request.POST.get('city', None)
+            l.append(city)
+            state = request.POST.get('state', None)
+            l.append(state)
+            country = request.POST.get('country', None)
+            l.append(country)
+            lng = request.POST.get('lng', None)
+            l.append(lng)
+            lat = request.POST.get('lat', None)
+            l.append(lat)
+            pk = request.POST.get('id', None)
 
-    location, created = Location.objects.get_or_create(city=city, state=state, country=country)
-    success = 'Location found'
+            response_data = {}
 
-    if created:
-        location.latitude = lat
-        location.longitude = lng
-        location.save()
-        success = 'Location added.'
-    if pk_:
-        post = get_object_or_404(Post, owner=request.user, pk=pk_)
-        post.location = location
-        post.save()
+            # create of get location
+            location, created = Location.objects.get_or_create(city=city, state=state, country=country)
 
-        data = {
-            'success': success
-        }
-        return redirect("post")
+            if created:
+                location.latitude = lat
+                location.longitude = lng
+                location.save()
+
+            if pk != None:
+                post = Post.objects.get(pk=pk)
+                if not all(v is None for v in l):
+                    post.location = location
+                    post.save()
+                url = '/posts/' + str(post.id) + '/'
+                response_data['status'] = 'Update Post'
+                response_data['url'] = url
+                return HttpResponse(
+                        json.dumps(response_data),
+                        content_type = 'application/json'
+                )
+
+            response_data['status'] = 'Create Post'
+            response_data['location'] = location.id
+            return HttpResponse(
+                    json.dumps(response_data),
+                    content_type='application/json'
+            )
+
+
+def ajaxCreatePost(request):
+    if request.method == 'POST':
+        location = request.POST.get('loc')
+        success = 'success!'
+
+        form = PostCreateForm(request.POST)
+        ImageFormset = formset_factory(form=ImageForm, formset=BaseImageFormset, extra=3)
+        if form.is_valid():
+            _location = Location.objects.get(pk=location)
+            post = form.save(commit=False)
+            post.owner = request.user
+            post.location = _location
+            post.save()
+
+            i = 1
+            formset = ImageFormset(request.POST, request.FILES)
+            for instance in formset:
+                try:
+                    photo = Image(post=post, image=instance.cleaned_data['image'], title=str(i))
+                    photo.save()
+                    i = i + 1
+                except Exception as e:
+                     break
+
+            url = '/posts/' + str(post.id) + '/'
+            return HttpResponse(
+                    json.dumps({'url': url}),
+                    content_type='application/json'
+            )
+
+        return HttpResponse(
+                json.dumps({'status': 'invalid'}),
+                content_type='application/json'
+        )
+

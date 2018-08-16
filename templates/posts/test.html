@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<form class='form postForm' method='POST' enctype='multipart/form-data'>
+	{{ form.non_field_errors }}
+	<div class="fieldWrapper">
+    		{{ form.title.errors }}
+    		<label for="{{ form.subject.id_for_label }}">title:</label>
+   		{{ form.title }}
+	</div>
+        <button class="primaryAction btn btn-success" type="submit">Submit</button>
+</form>
+
+{% endblock %}
