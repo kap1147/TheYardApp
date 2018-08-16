@@ -62,7 +62,7 @@
       <div class="modal-body mx-auto">
 	<form class='form formBid' action='{% url 'posts:post_add' %}' method='POST'>
 		<div class='form-group'>
-			<input class='bid form-control' type='text' name='bid' placeholder='{{ instance.price }}'>
+			<input class='bid form-control' type='text' name='bid' value='{{ instance.price }}'>
 		</div>
 	</form>
       </div>
