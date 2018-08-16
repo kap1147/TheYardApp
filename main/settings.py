@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'chat',
     'posts',
     'locations',
+    'jobs',
 ]
 
 SITE_ID = 1 

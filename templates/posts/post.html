@@ -63,7 +63,7 @@ $(document).ready(function(){
                         $('.mb').on('click', function(event){
 				console.log($('.bid').val());
                                 $.ajax({
-                                        url : "{% url 'posts:ajax_location' %}",
+                                        url : "{% url 'jobs:job_create' %}",
                                         type: 'POST',
                                         data: {bid: $('.bid').val(),
 					       post_id: {{object.id}} },
