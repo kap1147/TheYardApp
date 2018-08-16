@@ -27,6 +27,10 @@ def postCreateView(request):
         formset = ImageFormset(request.POST or None, request.FILES or None)
         if form.is_valid() and formset.is_valid():
             post = form.save(commit=False)
+<<<<<<< HEAD
+=======
+            i = request.POST['Post']
+>>>>>>> bd847206117a6bb4430d257bbd7ab9aa2be634e6
             post.owner = request.user
             post.save()
             i = 1
@@ -105,6 +109,7 @@ class PostListView(ListView):
 def ajaxSetPostLocation(request):
     if request.method == 'POST':
         if request.is_ajax():
+<<<<<<< HEAD
             l = []
             city = request.POST.get('city', None)
             l.append(city)
@@ -116,6 +121,13 @@ def ajaxSetPostLocation(request):
             l.append(lng)
             lat = request.POST.get('lat', None)
             l.append(lat)
+=======
+            city = request.POST.get('city', None)
+            state = request.POST.get('state', None)
+            country = request.POST.get('country', None)
+            lng = request.POST.get('lng', None)
+            lat = request.POST.get('lat', None)
+>>>>>>> bd847206117a6bb4430d257bbd7ab9aa2be634e6
             pk = request.POST.get('id', None)
 
             response_data = {}
@@ -130,9 +142,14 @@ def ajaxSetPostLocation(request):
 
             if pk != None:
                 post = Post.objects.get(pk=pk)
+<<<<<<< HEAD
                 if not all(v is None for v in l):
                     post.location = location
                     post.save()
+=======
+                post.location = location
+                post.save()
+>>>>>>> bd847206117a6bb4430d257bbd7ab9aa2be634e6
                 url = '/posts/' + str(post.id) + '/'
                 response_data['status'] = 'Update Post'
                 response_data['url'] = url
@@ -155,6 +172,7 @@ def ajaxCreatePost(request):
         success = 'success!'
 
         form = PostCreateForm(request.POST)
+<<<<<<< HEAD
         ImageFormset = formset_factory(form=ImageForm, formset=BaseImageFormset, extra=3)
         if form.is_valid():
             _location = Location.objects.get(pk=location)
@@ -173,6 +191,14 @@ def ajaxCreatePost(request):
                 except Exception as e:
                      break
 
+=======
+        if form.is_valid():
+            post_location = Location.objects.get(pk=location)
+            post = form.save(commit=False)
+            post.owner = request.user
+            post.location = post_location
+            post.save()
+>>>>>>> bd847206117a6bb4430d257bbd7ab9aa2be634e6
             url = '/posts/' + str(post.id) + '/'
             return HttpResponse(
                     json.dumps({'url': url}),
@@ -180,7 +206,12 @@ def ajaxCreatePost(request):
             )
 
         return HttpResponse(
+<<<<<<< HEAD
                 json.dumps({'status': 'invalid'}),
                 content_type='application/json'
+=======
+             json.dumps(request_data),
+             content_type='application/json'
+>>>>>>> bd847206117a6bb4430d257bbd7ab9aa2be634e6
         )
 
